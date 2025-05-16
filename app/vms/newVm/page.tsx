@@ -93,7 +93,7 @@ export default function NewMachineForm(){
             <div className="m-4 border-2 border-[#c6c6cd] rounded-lg p-4">
                 <h1 className="text-3xl font-bold">Configure Storage</h1>
                 <label>disk</label>
-                <select name="machineDisk" className="block px-2 border-1 border-black rounded-lg w-3/4">
+                <select required name="machineDisk" className="block px-2 border-1 border-black rounded-lg w-3/4">
                 {availableDisks.map((disk:any, index)=><option key={index} value={index}>{disk.name}</option>)}
                 </select>
             </div>

@@ -26,13 +26,13 @@ export default function NavBar(){
             </div>
             <div className={handleHidden()}>
                 <div className="block w-full m-4 text-bold text-l text-gray-400 hover:text-white">
-                    <Link href="disks">Virtual Disks</Link>
+                    <Link href="/disks">Virtual Disks</Link>
                 </div>
                 <div className="block w-full m-4 text-bold text-l text-gray-400 hover:text-white">
-                    <Link href="vms">Virtual Machines</Link>
+                    <Link href="/vms">Virtual Machines</Link>
                 </div>
                 <div className="block w-full m-4 text-bold text-l text-gray-400 hover:text-white">
-                    <Link href="containers">Containers</Link>
+                    <Link href="/containers">Containers</Link>
                 </div>
             </div>
         </nav>
