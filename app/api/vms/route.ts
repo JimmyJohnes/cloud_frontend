@@ -1,8 +1,10 @@
-import { QEMUImage } from "../(qemu)/image.model";
-import { ISOImage } from "../(qemu)/iso.model";
-import { QEMU } from "../(qemu)/qemu";
 import { NextRequest, NextResponse } from "next/server";
-const qemu = new QEMU("/home/jimmy/nvim/cloud_project/images")
+import VM from "./(models)/vm.model";
+
+export async function GET(){
+  const vms = await VM.find({});
+  return new Response(JSON.stringify(vms))
+}
 
 export async function POST(
   request:NextRequest
@@ -10,12 +12,19 @@ export async function POST(
   const body = await request.json();
   const newVM = {
     name: body.name,
-    iso: new ISOImage(body.iso.name,body.iso.location),
+    iso: body.iso,
     memory: body.memory.memory,
-    image: new QEMUImage(body.image.name,parseInt(body.image.size),body.image.isFixed,body.image.format, body.image.location)
+    image: body.image._id
   }
-  let res  = qemu.createVirtualMachineUsingImage(newVM.name,newVM.iso, newVM.memory,newVM.image)
-  console.log(res)
-  
+  await VM.findOneAndUpdate({name: body.name},{$set: newVM},{upsert: true, new:true});
+  return new Response("all done");
+}
+
+
+export async function DELETE(
+  request:NextRequest
+) {
+  const body = await request.json();
+  await VM.findByIdAndDelete(body.id);
   return new Response("all done");
 }

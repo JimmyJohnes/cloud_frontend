@@ -31,8 +31,8 @@ export default function NavBar(){
                 <div className="block w-full m-4 text-bold text-l text-gray-400 hover:text-white">
                     <Link href="vms">Virtual Machines</Link>
                 </div>
-                <div className="block w-full m-4 text-bold text-l text-gray-400 disabled">
-                    <Link href="#">Containers</Link>
+                <div className="block w-full m-4 text-bold text-l text-gray-400 hover:text-white">
+                    <Link href="containers">Containers</Link>
                 </div>
             </div>
         </nav>

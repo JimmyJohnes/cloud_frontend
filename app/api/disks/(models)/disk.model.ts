@@ -7,4 +7,5 @@ const schema = new mongoose.Schema({
     format:{type: String, required: true},
     location: {type: String, required: true},
 })
-export default mongoose.model("Disk",schema)
+const DiskModel = mongoose.models.Disk || mongoose.model("Disk",schema);
+export {DiskModel};

@@ -1,6 +1,8 @@
 "use client"
 import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 export default function NewMachineForm(){
+    const router = useRouter();
     const availableISOs = [
             {
                 name: "Manjaro Linux",
@@ -54,27 +56,25 @@ export default function NewMachineForm(){
 
     },[])
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) =>{
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget)
+    const handleSubmit = async (formData:FormData) =>{
         const body = {
             name:formData.get("machineName"),
-            iso: availableISOs[parseInt(formData.get("machineImage"))],
-            memory: availableMachineTypes[parseInt(formData.get("machineType"))],
-            image: availableDisks[parseInt(formData.get("machineDisk"))]
+            iso: availableISOs[parseInt(formData.get("machineImage")!.toString())],
+            memory: availableMachineTypes[parseInt(formData.get("machineType")!.toString())],
+            image: availableDisks[parseInt(formData.get("machineDisk")!.toString())]
         }
         const response = await fetch('/api/vms', {
         method: 'POST',
         body: JSON.stringify(body),
         })
-        console.log(response)
+        router.refresh();
     }
     return(
-        <form onSubmit={handleSubmit}>
+        <form action={handleSubmit}>
             <div className="m-4 border-2 border-[#c6c6cd] rounded-lg p-4">
                 <h1 className="text-3xl font-bold">Machine Name</h1>
                 <label>Name</label>
-                <input type="text" name="machineName" className="block px-2 border-1 border-black rounded-lg w-3/4"/>
+                <input type="text" required name="machineName" className="block px-2 border-1 border-black rounded-lg w-3/4"/>
             </div>
             <div className="m-4 border-2 border-[#c6c6cd] rounded-lg p-4">
                 <h1 className="text-3xl font-bold">Application and OS Images </h1>
@@ -94,11 +94,11 @@ export default function NewMachineForm(){
                 <h1 className="text-3xl font-bold">Configure Storage</h1>
                 <label>disk</label>
                 <select name="machineDisk" className="block px-2 border-1 border-black rounded-lg w-3/4">
-                {availableDisks.map((disk, index)=><option key={index} value={index}>{disk.name}</option>)}
+                {availableDisks.map((disk:any, index)=><option key={index} value={index}>{disk.name}</option>)}
                 </select>
             </div>
             <div className="flex float-right">
-            <input type="submit" value="Connect to virtual machine" className="py-2 px-6 rounded-full bg-[#ff9900]"/>
+            <input type="submit" value="Create Virutal Machine" className="py-2 px-6 rounded-full bg-[#ff9900]"/>
             </div>
         </form>
     );

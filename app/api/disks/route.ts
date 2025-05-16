@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { QEMU } from "../(qemu)/qemu";
 import "../(db)/dbConnection";
-import DiskModel from "./(models)/disk.model";
+import {DiskModel} from "./(models)/disk.model";
 import { QEMUImage } from "../(qemu)/image.model";
 const qemu = new QEMU("/home/jimmy/nvim/cloud_project/images");
 
@@ -54,20 +54,16 @@ export async function POST(
     newDisk.format = body.diskFormat;
   }
   let res = qemu.createVirtualDisk(newDisk.name,newDisk.size,newDisk.isFixed,newDisk.format)
-  console.log(res.image?.properties);
-  let newImage = new DiskModel(res.image?.properties);
-  newImage.save();
+  await DiskModel.findOneAndUpdate({name: newDisk.name}, { $set: res.image?.properties }, {upsert: true,new: true});
   return new Response(JSON.stringify(res));
 }
 
 export async function DELETE(request: NextRequest){
   const body = await request.json();
-  const imageToDelete = new QEMUImage(body.name, body.size, body.isFixed,body.format, body.location);
+  const imageToDelete = new QEMUImage( body.name, body.size, body.isFixed,body.format, body.location);
   let foo = qemu.deleteVirtualDiskFromImage(imageToDelete);
-  console.log(imageToDelete.properties);
-  console.log(foo);
-  if(foo.status != "failes"){
-    await DiskModel.findByIdAndDelete(body.id);
-  }
+  // console.log(imageToDelete.properties);
+  // console.log(foo);
+  await DiskModel.findByIdAndDelete(body.id);
   return new Response("Disk deleted successfully")
 }
